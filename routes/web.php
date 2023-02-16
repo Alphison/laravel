@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\IndexController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,27 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    // return view('welcome');
-    return 'sdfsdf';
+Route::controller(IndexController::class)->group(function (){
+    Route::get('/', 'index')->name('home');
+    Route::get('/add', 'add');
+    Route::get('/blocked', 'blocked')->name('blocked');
+    Route::get('/single', 'single');
+    Route::get('/user', 'user');
 });
 
-Route::get('/users', function () {
-    // return view('welcome');
-    return 'users';
-});
-
-Route::get('/users/{id}', function ($id) {
-    // return view('welcome');
-    return 'users'. $id;
-});
-
-Route::get('/books', function () {
-    // return view('welcome');
-    return 'все книги';
-});
-
-Route::get('/books/{id}', function ($id) {
-    // return view('welcome');
-    return 'книга'. $id;
+Route::controller(AuthController::class)->group(function (){
+    Route::post('/signup', 'signup')->name('register');
+    Route::post('/signin', 'signin')->name('login');
+    Route::get('/exit', 'exit')->name('exit');
 });
