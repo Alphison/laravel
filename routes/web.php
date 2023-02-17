@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IndexController;
+use App\Http\Middleware\AdminMiddleware;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -18,11 +20,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(IndexController::class)->group(function (){
     Route::get('/', 'index')->name('home');
-    Route::get('/add', 'add');
+
+
+    Route::middleware('auth')->get('/articles/create', 'add')->name('article.create');
     Route::get('/blocked', 'blocked')->name('blocked');
     Route::get('/single', 'single');
     Route::get('/user', 'user');
+
 });
+
+//Route::middleware(['auth', AdminMiddleware::class])->controller(AdminController::class)->prefix('/admin')->group(function (){
+//    Route::get('/create', 'createArticle')->name('admin.create');
+//});
+
+Route::get('article/{id}', [\App\Http\Controllers\ArticleController::class, 'show'])->name('single');
+Route::post('article/create', [\App\Http\Controllers\ArticleController::class, 'store'])->name('article.createPost');
 
 Route::controller(AuthController::class)->group(function (){
     Route::post('/signup', 'signup')->name('register');

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -9,18 +11,22 @@ class IndexController extends Controller
 {
     public function index()
     {
-        $users = User::query()
-            ->where('role', '=', 'admin')
-            ->orderByDesc('id')
-            ->limit(10)
+
+        $articles = Article::query()
+            ->where('status', '=', 'published')
+            ->orderByDesc('created_at')
             ->get();
 
-        return view('index', compact('users'));
+        return view('index', compact('articles'));
     }
 
     public function add()
     {
-        return view('add');
+        $categories = Category::all();
+
+        return view('add', [
+            'categories' => $categories
+        ]);
     }
 
     public function blocked()
